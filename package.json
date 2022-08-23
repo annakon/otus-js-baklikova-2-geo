@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/annakon/otus-js-baklikova-2-geo/issues"
   },
-  "homepage": "https://github.com/annakon/otus-js-baklikova-2-geo#readme"
+  "homepage": "https://github.com/annakon/otus-js-baklikova-2-geo#readme",
+  "devDependencies": {
+    "@types/jest": "^28.1.7",
+    "install": "^0.13.0",
+    "jest": "^28.1.3"
+  }
 }
