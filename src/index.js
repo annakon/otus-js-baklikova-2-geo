@@ -54,8 +54,10 @@ const dataWeather = {
  *
  * Разметка любая
  */
-function drawWeather(el, data) {
-  el.innerHTML = `<h1>${data.name}</h1><p>${data.main.temp}</p>
+async function drawWeather(el, data) {
+  const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
+  const json = await response.json();
+  el.innerHTML = `<h1>${json.region}</h1><p>${data.main.temp}</p>
                    <img src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png">`;
 }
 

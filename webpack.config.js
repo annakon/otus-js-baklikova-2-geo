@@ -57,4 +57,7 @@ module.exports = {
     port: 9000,
     watchFiles: ["*.html"],
   },
+  experiments: {
+    topLevelAwait: true,
+  },
 };
