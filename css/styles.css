@@ -25,6 +25,12 @@ p {
   font-size: 56px;
 }
 
+#map {
+  margin: 20px auto;
+  width: 600px;
+  height: 400px;
+}
+
 button {
   padding: 0 10px;
 }
