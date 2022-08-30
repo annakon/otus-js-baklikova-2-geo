@@ -24,3 +24,7 @@ h1 {
 p {
   font-size: 56px;
 }
+
+button {
+  padding: 0 10px;
+}

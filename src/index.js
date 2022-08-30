@@ -1,18 +1,70 @@
 import "../css/styles.css";
 
-async function drawWeather(el) {
-  const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
-  const json = await response.json();
+(async function () {
+  // Должна возвращать список пользователя
+  // Если пользователь ничего не вводил - пустой список
+  async function readList() {
+    const a = localStorage.getItem("list");
+    if (a === null) {
+      return [];
+    }
+    return JSON.parse(a, []);
+  }
 
-  const responseOpenweathermap = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${json.latitude}&lon=${json.longitude}&appid=2dd5152e26591562500eba5a006f9a67`
-  );
-  const jsonOpenweathermap = await responseOpenweathermap.json();
+  // Сохраняет список
+  function saveList(items) {
+    localStorage.setItem("list", JSON.stringify(items));
+  }
 
-  const temp = (jsonOpenweathermap.main.temp - 273.15).toFixed(0);
+  function drawList(el, items) {
+    el.innerHTML = `${items.map((el) => `<option>${el}</option>`).join("")}`;
+  }
 
-  el.innerHTML = `<h1>${json.region}</h1><p>${temp}&deg;</p>
+  async function drawWeather(el) {
+    const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
+    const json = await response.json();
+
+    const responseOpenweathermap = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${json.latitude}&lon=${json.longitude}&appid=2dd5152e26591562500eba5a006f9a67`
+    );
+    const jsonOpenweathermap = await responseOpenweathermap.json();
+
+    const temp = (jsonOpenweathermap.main.temp - 273.15).toFixed(0);
+
+    el.innerHTML = `<h1>${json.region}</h1><p>${temp}&deg;</p>
                    <img alt="icon" src="http://openweathermap.org/img/wn/${jsonOpenweathermap.weather[0].icon}@2x.png">`;
-}
+  }
 
-drawWeather(document.querySelector("#container"));
+  // Получаем указатели на нужные элементы
+  const form = document.querySelector("form");
+  const listEl = document.querySelector("#recentResults");
+
+  // Читаем список при старте
+  const items = await readList();
+
+  // и отрисовываем список
+  drawList(listEl, items);
+
+  drawWeather(document.querySelector("#container"));
+
+  form.addEventListener("submit", (ev) => {
+    // чтобы не перезагружать страницу
+    ev.preventDefault();
+
+    // читаем значение из формы
+    const formElement = ev.target;
+    const input = formElement.querySelector("input");
+    const {value} = input;
+    input.value = "";
+
+    // добавляем элемент в список
+    items.push(value);
+
+    // обновляем список
+    drawList(listEl, items);
+
+    // сохраняем список
+    saveList(items);
+    // drawWeather(document.querySelector("#container"));
+  });
+})();
