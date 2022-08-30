@@ -20,18 +20,28 @@ import "../css/styles.css";
     el.innerHTML = `${items.map((el) => `<option>${el}</option>`).join("")}`;
   }
 
-  async function drawWeather(el) {
-    const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
-    const json = await response.json();
+  async function returnResponseOpenweathermap(city) {
+    if (city === "") {
+      const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
+      const json = await response.json();
 
-    const responseOpenweathermap = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${json.latitude}&lon=${json.longitude}&appid=2dd5152e26591562500eba5a006f9a67`
+      return fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${json.latitude}&lon=${json.longitude}&appid=2dd5152e26591562500eba5a006f9a67`
+      );
+    }
+
+    return fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=2dd5152e26591562500eba5a006f9a67`
     );
+  }
+
+  async function drawWeather(el, city) {
+    const responseOpenweathermap = await returnResponseOpenweathermap(city);
     const jsonOpenweathermap = await responseOpenweathermap.json();
 
     const temp = (jsonOpenweathermap.main.temp - 273.15).toFixed(0);
 
-    el.innerHTML = `<h1>${json.region}</h1><p>${temp}&deg;</p>
+    el.innerHTML = `<h1>${jsonOpenweathermap.name}</h1><p>${temp}&deg;</p>
                    <img alt="icon" src="http://openweathermap.org/img/wn/${jsonOpenweathermap.weather[0].icon}@2x.png">`;
   }
 
@@ -45,7 +55,7 @@ import "../css/styles.css";
   // и отрисовываем список
   drawList(listEl, items);
 
-  drawWeather(document.querySelector("#container"));
+  drawWeather(document.querySelector("#container"), "");
 
   form.addEventListener("submit", (ev) => {
     // чтобы не перезагружать страницу
@@ -54,7 +64,7 @@ import "../css/styles.css";
     // читаем значение из формы
     const formElement = ev.target;
     const input = formElement.querySelector("input");
-    const {value} = input;
+    const { value } = input;
     input.value = "";
 
     // добавляем элемент в список
@@ -65,6 +75,6 @@ import "../css/styles.css";
 
     // сохраняем список
     saveList(items);
-    // drawWeather(document.querySelector("#container"));
+    drawWeather(document.querySelector("#container"), value);
   });
 })();
