@@ -13,6 +13,7 @@ import "../css/styles.css";
 
   // Сохраняет список
   function saveList(items) {
+    // let unique = [...new Set(items)];
     localStorage.setItem("list", JSON.stringify(items));
   }
 
@@ -68,7 +69,7 @@ import "../css/styles.css";
     input.value = "";
 
     // добавляем элемент в список
-    items.push(value);
+    if (!items.includes(value)) items.push(value);
 
     // обновляем список
     drawList(listEl, items);
