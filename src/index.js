@@ -70,6 +70,7 @@ import "../css/styles.css";
 
     // добавляем элемент в список
     if (!items.includes(value)) items.push(value);
+    if (items.length > 10) items.shift();
 
     // обновляем список
     drawList(listEl, items);
