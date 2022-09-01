@@ -44,6 +44,23 @@ import "../css/styles.css";
 
     el.innerHTML = `<h1>${jsonOpenweathermap.name}</h1><p>${temp}&deg;</p>
                    <img alt="icon" src="http://openweathermap.org/img/wn/${jsonOpenweathermap.weather[0].icon}@2x.png">`;
+
+    document.getElementById("map").innerHTML = "";
+
+    ymaps.ready(init);
+    function init() {
+      // Создание карты.
+      const myMap = new ymaps.Map("map", {
+        // Координаты центра карты.
+        // Порядок по умолчанию: «широта, долгота».
+        // Чтобы не определять координаты центра карты вручную,
+        // воспользуйтесь инструментом Определение координат.
+        center: [jsonOpenweathermap.coord.lat, jsonOpenweathermap.coord.lon],
+        // Уровень масштабирования. Допустимые значения:
+        // от 0 (весь мир) до 19.
+        zoom: 7,
+      });
+    }
   }
 
   // Получаем указатели на нужные элементы
@@ -57,21 +74,6 @@ import "../css/styles.css";
   drawList(listEl, items);
 
   drawWeather(document.querySelector("#container"), "");
-
-  ymaps.ready(init);
-  function init() {
-    // Создание карты.
-    const myMap = new ymaps.Map("map", {
-      // Координаты центра карты.
-      // Порядок по умолчанию: «широта, долгота».
-      // Чтобы не определять координаты центра карты вручную,
-      // воспользуйтесь инструментом Определение координат.
-      center: [55.76, 37.64],
-      // Уровень масштабирования. Допустимые значения:
-      // от 0 (весь мир) до 19.
-      zoom: 7,
-    });
-  }
 
   form.addEventListener("submit", (ev) => {
     // чтобы не перезагружать страницу
