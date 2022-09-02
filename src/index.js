@@ -1,6 +1,6 @@
 import "../css/styles.css";
 
-(async function () {
+export async function init() {
   // Должна возвращать список пользователя
   // Если пользователь ничего не вводил - пустой список
   async function readList() {
@@ -13,7 +13,6 @@ import "../css/styles.css";
 
   // Сохраняет список
   function saveList(items) {
-    // let unique = [...new Set(items)];
     localStorage.setItem("list", JSON.stringify(items));
   }
 
@@ -96,4 +95,5 @@ import "../css/styles.css";
     saveList(items);
     drawWeather(document.querySelector("#container"), value);
   });
-})();
+}
+init();
