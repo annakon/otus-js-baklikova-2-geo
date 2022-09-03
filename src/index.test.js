@@ -7,22 +7,19 @@ import * as fs from "fs";
 import init from "./index";
 
 describe("init", () => {
-  document.body.innerHTML = fs.readFileSync(`${__dirname  }/../index.html`);
-
   let button;
   let input;
   let h1;
   let p;
 
-  beforeEach(() => init());
+  beforeEach(() => {
+    document.body.innerHTML = fs.readFileSync(`${__dirname}/../index.html`);
+    return init();
+  });
 
   function getParagraphs() {
-    return [...document.querySelectorAll("p")].map((p) => p.innerHTML);
+    return [...document.querySelectorAll("option")].map((op) => op.innerHTML);
   }
-
-  /* it("is a function", () => {
-        expect(makeInteractiveList).toBeInstanceOf(Function);
-    }); */
 
   it("makes initial markup", () => {
     button = document.querySelector("button");
@@ -42,7 +39,17 @@ describe("init", () => {
     expect(img).toBeTruthy();
     const map = document.querySelector("#map");
     expect(map).toBeTruthy();
-    /* expect(el.querySelectorAll("p").length).toBe(3);
-        expect(getParagraphs()).toEqual(["1", "22", "333"]); */
+  });
+
+  it("adds new paragraph on button click", () => {
+    // ввести текст
+    button = document.querySelector("button");
+    input = document.querySelector("input");
+    input.value = "Singapore";
+    input.dispatchEvent(new Event("input"));
+    // нажать кнопку
+    button.click();
+    // проверить что добавился параграф
+    expect(getParagraphs()).toEqual(["Singapore"]);
   });
 });
