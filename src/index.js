@@ -1,6 +1,6 @@
 import "../css/styles.css";
 
-export async function init() {
+async function init() {
   // Должна возвращать список пользователя
   // Если пользователь ничего не вводил - пустой список
   async function readList() {
@@ -46,8 +46,8 @@ export async function init() {
 
     document.getElementById("map").innerHTML = "";
 
-    ymaps.ready(init);
-    function init() {
+    ymaps.ready(initMap);
+    function initMap() {
       // Создание карты.
       const myMap = new ymaps.Map("map", {
         // Координаты центра карты.
@@ -72,8 +72,6 @@ export async function init() {
   // и отрисовываем список
   drawList(listEl, items);
 
-  drawWeather(document.querySelector("#container"), "");
-
   form.addEventListener("submit", (ev) => {
     // чтобы не перезагружать страницу
     ev.preventDefault();
@@ -95,5 +93,10 @@ export async function init() {
     saveList(items);
     drawWeather(document.querySelector("#container"), value);
   });
+
+  return drawWeather(document.querySelector("#container"), "");
 }
-init();
+
+window.init = init;
+
+export default init;

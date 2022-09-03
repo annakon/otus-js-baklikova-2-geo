@@ -1,19 +1,20 @@
-import { init } from "./index";
+/**
+ * @jest-environment jsdom
+ */
+
+import * as fs from "fs";
+
+import init from "./index";
 
 describe("init", () => {
+  document.body.innerHTML = fs.readFileSync(`${__dirname  }/../index.html`);
+
   let button;
   let input;
   let h1;
   let p;
-  // let el;
-  beforeEach(() => {
-    // el = document.createElement("div");
-    init();
-    button = document.querySelector("button");
-    input = document.querySelector("input");
-    h1 = document.querySelector("h1");
-    p = document.querySelector("p");
-  });
+
+  beforeEach(() => init());
 
   function getParagraphs() {
     return [...document.querySelectorAll("p")].map((p) => p.innerHTML);
@@ -24,6 +25,11 @@ describe("init", () => {
     }); */
 
   it("makes initial markup", () => {
+    button = document.querySelector("button");
+    input = document.querySelector("input");
+    h1 = document.querySelector("h1");
+    p = document.querySelector("p");
+
     expect(input).toBeTruthy();
     expect(button).toBeTruthy();
     expect(button.innerHTML).toBe("Find");
