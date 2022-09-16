@@ -1,25 +1,7 @@
 import "../css/styles.css";
+import { readList, saveList, drawList } from "./localStorage";
 
 async function init() {
-  // Должна возвращать список пользователя
-  // Если пользователь ничего не вводил - пустой список
-  async function readList() {
-    const a = localStorage.getItem("list");
-    if (a === null) {
-      return [];
-    }
-    return JSON.parse(a, []);
-  }
-
-  // Сохраняет список
-  function saveList(items) {
-    localStorage.setItem("list", JSON.stringify(items));
-  }
-
-  function drawList(el, items) {
-    el.innerHTML = `${items.map((el) => `<option>${el}</option>`).join("")}`;
-  }
-
   async function returnResponseOpenweathermap(city) {
     if (city === "") {
       const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
