@@ -1,17 +1,50 @@
 import { readList, saveList, drawList } from "./localStorage";
-import { drawWeather } from "./api";
+import { returnResponseOpenweathermap } from "./api";
+
+const T0 = 273.15;
+const form = document.querySelector("form");
+const listEl = document.querySelector("#recentResults");
+let items;
+
+async function drawWeather(el, city) {
+  const responseOpenweathermap = await returnResponseOpenweathermap(city);
+  const jsonOpenweathermap = await responseOpenweathermap.json();
+
+  const temp = (jsonOpenweathermap.main.temp - T0).toFixed(0);
+
+  el.innerHTML = `<h1>${jsonOpenweathermap.name}</h1><p>${temp}&deg;</p>
+                   <img alt="icon" src="http://openweathermap.org/img/wn/${jsonOpenweathermap.weather[0].icon}@2x.png">`;
+
+  if (city === "") {
+    // Читаем список при старте
+    items = await readList();
+    if (!items.includes(jsonOpenweathermap.name))
+      items.push(jsonOpenweathermap.name);
+    if (items.length > 10) items.shift();
+    // и отрисовываем список
+    drawList(listEl, items);
+    saveList(items);
+  }
+
+  document.getElementById("map").innerHTML = "";
+
+  ymaps.ready(initMap);
+  function initMap() {
+    // Создание карты.
+    const myMap = new ymaps.Map("map", {
+      // Координаты центра карты.
+      // Порядок по умолчанию: «широта, долгота».
+      // Чтобы не определять координаты центра карты вручную,
+      // воспользуйтесь инструментом Определение координат.
+      center: [jsonOpenweathermap.coord.lat, jsonOpenweathermap.coord.lon],
+      // Уровень масштабирования. Допустимые значения:
+      // от 0 (весь мир) до 19.
+      zoom: 7,
+    });
+  }
+}
 
 export async function init() {
-  // Получаем указатели на нужные элементы
-  const form = document.querySelector("form");
-  const listEl = document.querySelector("#recentResults");
-
-  // Читаем список при старте
-  const items = await readList();
-
-  // и отрисовываем список
-  drawList(listEl, items);
-
   form.addEventListener("submit", (ev) => {
     // чтобы не перезагружать страницу
     ev.preventDefault();
