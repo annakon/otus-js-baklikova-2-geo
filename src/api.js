@@ -1,3 +1,5 @@
+const T0 = 273.15;
+
 export async function returnResponseOpenweathermap(city) {
   if (city === "") {
     const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
@@ -17,7 +19,7 @@ export async function drawWeather(el, city) {
   const responseOpenweathermap = await returnResponseOpenweathermap(city);
   const jsonOpenweathermap = await responseOpenweathermap.json();
 
-  const temp = (jsonOpenweathermap.main.temp - 273.15).toFixed(0);
+  const temp = (jsonOpenweathermap.main.temp - T0).toFixed(0);
 
   el.innerHTML = `<h1>${jsonOpenweathermap.name}</h1><p>${temp}&deg;</p>
                    <img alt="icon" src="http://openweathermap.org/img/wn/${jsonOpenweathermap.weather[0].icon}@2x.png">`;
