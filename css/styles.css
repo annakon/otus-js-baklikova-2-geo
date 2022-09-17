@@ -1,0 +1,36 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100vh;
+}
+
+body {
+  color: white;
+  padding: 30px;
+  text-align: center;
+  background-color: skyblue;
+}
+
+h1 {
+  font-size: 78px;
+  text-shadow: 2px 2px 3px rgb(163, 163, 163);
+}
+
+p {
+  font-size: 56px;
+}
+
+#map {
+  margin: 20px auto;
+  width: 600px;
+  height: 400px;
+}
+
+button {
+  padding: 0 10px;
+}
