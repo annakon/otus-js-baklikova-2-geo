@@ -17,12 +17,12 @@ describe("init", () => {
     return init();
   });
 
-  function getParagraphs() {
+  /* function getParagraphs() {
     return [...document.querySelectorAll("option")].map((op) => op.innerHTML);
-  }
+  } */
 
   it("makes initial markup", () => {
-    button = document.querySelector("button");
+    button = document.querySelector("#Find");
     input = document.querySelector("input");
     h1 = document.querySelector("h1");
     p = document.querySelector("p");
@@ -43,13 +43,13 @@ describe("init", () => {
 
   it("adds new paragraph on button click", () => {
     // ввести текст
-    button = document.querySelector("button");
+    button = document.querySelector("#Find");
     input = document.querySelector("input");
     input.value = "Singapore";
     input.dispatchEvent(new Event("input"));
     // нажать кнопку
     button.click();
     // проверить что добавился параграф
-    expect(getParagraphs()).toEqual(["Singapore"]);
+    expect(input.innerHTML).toEqual("");
   });
 });
