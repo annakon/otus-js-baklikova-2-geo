@@ -2,8 +2,6 @@ import { readList, saveList, drawList } from "./localStorage";
 import { returnResponseOpenweathermap } from "./api";
 
 const T0 = 273.15;
-const form = document.querySelector("form");
-const listEl = document.querySelector("#recentResults");
 let items;
 
 async function drawWeather(el, city) {
@@ -19,6 +17,8 @@ async function drawWeather(el, city) {
 
   el.innerHTML = `<h1>${jsonOpenweathermap.name}</h1><p>${temp}&deg;</p>
                    <img alt="icon" src="http://openweathermap.org/img/wn/${jsonOpenweathermap.weather[0].icon}@2x.png">`;
+
+  const listEl = document.querySelector("#recentResults");
 
   if (city === "") {
     // Читаем список при старте
@@ -52,6 +52,7 @@ async function drawWeather(el, city) {
 }
 
 export async function init() {
+  const form = document.querySelector("form");
   form.addEventListener("submit", (ev) => {
     // чтобы не перезагружать страницу
     ev.preventDefault();
