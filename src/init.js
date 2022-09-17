@@ -1,4 +1,4 @@
-import { readList, saveList, drawList } from "./localStorage";
+import { readList, saveList } from "./localStorage";
 import { returnResponseOpenweathermap } from "./api";
 
 const T0 = 273.15;
@@ -15,10 +15,11 @@ async function drawWeather(el, city) {
 
   const temp = (jsonOpenweathermap.main.temp - T0).toFixed(0);
 
-  el.innerHTML = `<h1>${jsonOpenweathermap.name}</h1><p>${temp}&deg;</p>
+  el.innerHTML = `<h1>${jsonOpenweathermap.name}</h1><div id="plusButton"></div><p>${temp}&deg;</p>
                    <img alt="icon" src="http://openweathermap.org/img/wn/${jsonOpenweathermap.weather[0].icon}@2x.png">`;
 
   const listEl = document.querySelector("#recentResults");
+  const buttonList = document.querySelector("#plusButton");
 
   if (city === "") {
     // Читаем список при старте
@@ -29,7 +30,7 @@ async function drawWeather(el, city) {
   if (!items.includes(value)) items.push(value);
   if (items.length > 10) items.shift();
   // обновляем список
-  drawList(listEl, items);
+  drawList(buttonList, listEl, items);
   // сохраняем список
   saveList(items);
 
@@ -51,20 +52,35 @@ async function drawWeather(el, city) {
   }
 }
 
+function drawList(butEl, el, items) {
+  el.innerHTML = `${items.map((el) => `<option>${el}</option>`).join("")}`;
+  let but;
+  for (let i = 0; i < items.length; i += 1) {
+    but = document.createElement("button");
+    but.innerHTML = items[i];
+    but.addEventListener("click", () => {
+      drawWeather(document.querySelector("#container"), items[i]);
+    });
+    butEl.appendChild(but);
+  }
+}
+
+function onCityClick(ev) {
+  // чтобы не перезагружать страницу
+  ev.preventDefault();
+
+  // читаем значение из формы
+  const formElement = ev.target;
+  const input = formElement.querySelector("input");
+  const { value } = input;
+  input.value = "";
+
+  drawWeather(document.querySelector("#container"), value);
+}
+
 export async function init() {
   const form = document.querySelector("form");
-  form.addEventListener("submit", (ev) => {
-    // чтобы не перезагружать страницу
-    ev.preventDefault();
-
-    // читаем значение из формы
-    const formElement = ev.target;
-    const input = formElement.querySelector("input");
-    const { value } = input;
-    input.value = "";
-
-    drawWeather(document.querySelector("#container"), value);
-  });
+  form.addEventListener("submit", onCityClick);
 
   return drawWeather(document.querySelector("#container"), "");
 }

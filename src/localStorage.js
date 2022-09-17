@@ -12,7 +12,3 @@ export async function readList() {
 export function saveList(items) {
   localStorage.setItem("list", JSON.stringify(items));
 }
-
-export function drawList(el, items) {
-  el.innerHTML = `${items.map((el) => `<option>${el}</option>`).join("")}`;
-}
