@@ -10,6 +10,11 @@ async function drawWeather(el, city) {
   const responseOpenweathermap = await returnResponseOpenweathermap(city);
   const jsonOpenweathermap = await responseOpenweathermap.json();
 
+  if (jsonOpenweathermap.cod !== 200) {
+    alert(jsonOpenweathermap.message);
+    return;
+  }
+
   const temp = (jsonOpenweathermap.main.temp - T0).toFixed(0);
 
   el.innerHTML = `<h1>${jsonOpenweathermap.name}</h1><p>${temp}&deg;</p>
@@ -18,13 +23,15 @@ async function drawWeather(el, city) {
   if (city === "") {
     // Читаем список при старте
     items = await readList();
-    if (!items.includes(jsonOpenweathermap.name))
-      items.push(jsonOpenweathermap.name);
-    if (items.length > 10) items.shift();
-    // и отрисовываем список
-    drawList(listEl, items);
-    saveList(items);
   }
+  const value = city === "" ? jsonOpenweathermap.name : city;
+  // добавляем элемент в список
+  if (!items.includes(value)) items.push(value);
+  if (items.length > 10) items.shift();
+  // обновляем список
+  drawList(listEl, items);
+  // сохраняем список
+  saveList(items);
 
   document.getElementById("map").innerHTML = "";
 
@@ -55,15 +62,6 @@ export async function init() {
     const { value } = input;
     input.value = "";
 
-    // добавляем элемент в список
-    if (!items.includes(value)) items.push(value);
-    if (items.length > 10) items.shift();
-
-    // обновляем список
-    drawList(listEl, items);
-
-    // сохраняем список
-    saveList(items);
     drawWeather(document.querySelector("#container"), value);
   });
 
